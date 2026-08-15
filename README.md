@@ -78,6 +78,8 @@ Use `<leader>fp`, `:ProjectFind [raiz-de-busca]` ou `:ProjectSwitch [path]`. A t
 | `<leader>fs` / `<leader>fS` | símbolos do documento / workspace |
 | `<leader>fc`, `<leader>fh`, `<leader>fd`, `<leader>fD` | comandos, ajuda, diagnósticos do buffer / do workspace |
 | `<leader>fp` | trocar projeto |
+| `<leader>fR` | buscar e substituir no workspace (seleção preenche a busca em modo visual) |
+| `]d` / `[d` | próximo / anterior diagnóstico |
 | `<leader>h/j/k/l` | focar split |
 | `<leader>H/L/J/K` | redimensionar split |
 | `<leader>wv` / `<leader>ws` | split vertical / horizontal |
@@ -88,6 +90,7 @@ Use `<leader>fp`, `:ProjectFind [raiz-de-busca]` ou `:ProjectSwitch [path]`. A t
 | `gd`, `gD`, `gr`, `gi` | definição, declaração, referências, implementação |
 | `K`, `F2` | hover + diagnóstico da linha em um só popup, renomear símbolo |
 | `<leader>ca`, `<leader>cd` | code action, diagnóstico da linha |
+| `<leader>ch` | alternar inlay hints (quando o servidor suporta) |
 | `<leader>a` / `<leader>A` | trocar parâmetro com o próximo / anterior |
 | `<leader>cf` | formatar arquivo ou seleção explicitamente |
 | `<leader>gg` | abrir LazyGit |
@@ -110,6 +113,7 @@ Use `<leader>fp`, `:ProjectFind [raiz-de-busca]` ou `:ProjectSwitch [path]`. A t
 | snacks.nvim | notifier, bigfile, quickfile e LazyGit somente; dashboard desativado |
 | neo-tree.nvim | único explorer |
 | fzf-lua | único fuzzy finder |
+| grug-far.nvim | busca e substituição em múltiplos arquivos, com preview |
 | which-key.nvim | descoberta dos grupos semânticos |
 | mini.ai/surround/pairs/bufremove | edição estrutural e buffers seguros |
 | nvim-treesitter + textobjects | parsing, highlight e movimentos estruturais |
@@ -146,7 +150,7 @@ O resolvedor único em `tools.lua` procura `VIRTUAL_ENV`, `.venv`, `venv`, o `PA
 
 ### Completion
 
-Blink só propõe candidatos após dois caracteres para LSP, buffer e paths. `Tab` avança no menu/snippet ou indenta; `Shift-Tab` volta ou reduz indentação. `Enter` aceita apenas uma entrada selecionada explicitamente, pois preselect e auto-insert estão desligados. Não há inlay hints, signature help automática ou documentação automática.
+Blink só propõe candidatos após dois caracteres para LSP, buffer e paths. `Tab` avança no menu/snippet ou indenta; `Shift-Tab` volta ou reduz indentação. `Enter` aceita apenas uma entrada selecionada explicitamente, pois preselect e auto-insert estão desligados. Inlay hints ficam desligados por padrão e são ativados sob demanda com `<leader>ch`; não há signature help automática ou documentação automática.
 
 ## Build e quickfix
 

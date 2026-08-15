@@ -26,6 +26,9 @@ function M.setup()
   map('n', '[b', '<cmd>bprevious<cr>', 'Previous buffer')
   map('n', ']b', '<cmd>bnext<cr>', 'Next buffer')
 
+  map('n', ']d', function() vim.diagnostic.jump { count = 1, float = true } end, 'Next diagnostic')
+  map('n', '[d', function() vim.diagnostic.jump { count = -1, float = true } end, 'Previous diagnostic')
+
   map('n', ']x', [[/^<<<<<<<\|^=======\|^>>>>>>><cr>]], 'Next conflict marker')
   map('n', '[x', [[?^<<<<<<<\|^=======\|^>>>>>>><cr>]], 'Previous conflict marker')
 end

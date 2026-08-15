@@ -96,6 +96,14 @@ function M.setup()
       map('<leader>cr', function() require('fzf-lua').lsp_references() end, 'References')
       map('<leader>cs', function() require('fzf-lua').lsp_document_symbols() end, 'Document symbols')
       map('<leader>cS', function() require('fzf-lua').lsp_live_workspace_symbols() end, 'Workspace symbols')
+
+      local client = vim.lsp.get_client_by_id(args.data.client_id)
+      if client and client:supports_method 'textDocument/inlayHint' then
+        map('<leader>ch', function()
+          local bufnr = args.buf
+          vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = bufnr }, { bufnr = bufnr })
+        end, 'Toggle inlay hints')
+      end
     end,
   })
 

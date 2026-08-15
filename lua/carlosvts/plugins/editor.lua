@@ -47,6 +47,24 @@ return {
     },
   },
   {
+    'MagicDuck/grug-far.nvim',
+    cmd = 'GrugFar',
+    opts = {},
+    keys = {
+      {
+        '<leader>fR',
+        function() require('grug-far').open { transient = true, prefills = { paths = project.get() } } end,
+        desc = 'Search and replace in workspace',
+      },
+      {
+        '<leader>fR',
+        function() require('grug-far').with_visual_selection { transient = true, prefills = { paths = project.get() } } end,
+        mode = 'x',
+        desc = 'Search and replace selection',
+      },
+    },
+  },
+  {
     'nvim-neo-tree/neo-tree.nvim',
     branch = 'v3.x',
     cmd = 'Neotree',
