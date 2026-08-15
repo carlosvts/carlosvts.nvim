@@ -1,22 +1,45 @@
 local M = {}
 
+-- Merges line diagnostics above LSP hover in a single float, since IDEs
+-- typically surface both together instead of requiring separate keys.
+local function hover_with_diagnostics()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local win = vim.api.nvim_get_current_win()
+  local lnum = vim.api.nvim_win_get_cursor(win)[1] - 1
+  local lines = {}
+
+  for _, diagnostic in ipairs(vim.diagnostic.get(bufnr, { lnum = lnum })) do
+    table.insert(lines, ('**%s**: %s'):format(vim.diagnostic.severity[diagnostic.severity], diagnostic.message))
+  end
+  if #lines > 0 then table.insert(lines, '---') end
+
+  local client = vim.lsp.get_clients({ bufnr = bufnr, method = 'textDocument/hover' })[1]
+  if not client then
+    if #lines > 0 then vim.lsp.util.open_floating_preview(lines, 'markdown', { border = 'rounded', focus = false }) end
+    return
+  end
+
+  local params = vim.lsp.util.make_position_params(win, client.offset_encoding)
+  client:request('textDocument/hover', params, function(_, result)
+    if result and result.contents then vim.list_extend(lines, vim.lsp.util.convert_input_to_markdown_lines(result.contents)) end
+    lines = vim.lsp.util.trim_empty_lines(lines)
+    if #lines == 0 then
+      vim.notify('No information available', vim.log.levels.INFO)
+      return
+    end
+    vim.lsp.util.open_floating_preview(lines, 'markdown', { border = 'rounded', focus = false })
+  end, bufnr)
+end
+
 function M.setup()
   local group = vim.api.nvim_create_augroup('CarlosvtsCore', { clear = true })
   vim.api.nvim_create_autocmd('InsertEnter', {
     group = group,
-    callback = function()
-      vim.wo.relativenumber = false
-      vim.wo.cursorline = true
-      vim.wo.cursorcolumn = false
-    end,
+    callback = function() vim.wo.relativenumber = false end,
   })
   vim.api.nvim_create_autocmd('InsertLeave', {
     group = group,
-    callback = function()
-      vim.wo.relativenumber = true
-      vim.wo.cursorline = false
-      vim.wo.cursorcolumn = true
-    end,
+    callback = function() vim.wo.relativenumber = true end,
   })
   vim.api.nvim_create_autocmd('TextYankPost', {
     group = group,
@@ -29,6 +52,15 @@ function M.setup()
       vim.opt_local.wrap = true
       vim.opt_local.linebreak = true
       vim.opt_local.spell = false
+    end,
+  })
+  vim.api.nvim_create_autocmd('FileType', {
+    group = group,
+    pattern = 'lua',
+    callback = function()
+      vim.opt_local.shiftwidth = 2
+      vim.opt_local.tabstop = 2
+      vim.opt_local.softtabstop = 2
     end,
   })
 
@@ -57,7 +89,7 @@ function M.setup()
       map('gD', vim.lsp.buf.declaration, 'Declaration')
       map('gr', function() require('fzf-lua').lsp_references() end, 'References')
       map('gi', vim.lsp.buf.implementation, 'Implementation')
-      map('K', vim.lsp.buf.hover, 'Hover documentation')
+      map('K', hover_with_diagnostics, 'Hover documentation and diagnostics')
       map('<F2>', vim.lsp.buf.rename, 'Rename symbol')
       map('<leader>ca', vim.lsp.buf.code_action, 'Code action')
       map('<leader>cd', vim.diagnostic.open_float, 'Line diagnostics')
@@ -76,7 +108,6 @@ function M.setup()
     end
     pcall(function() require('ibl').setup_buffer(buf, { enabled = false }) end)
     vim.bo[buf].syntax = vim.bo[buf].filetype
-    vim.wo.cursorcolumn = false
     if not vim.b[buf].carlosvts_bigfile_notified then
       vim.b[buf].carlosvts_bigfile_notified = true
       vim.schedule(function() vim.notify('Large-file mode: LSP, completion, Treesitter, lint and indent guides disabled.', vim.log.levels.INFO) end)

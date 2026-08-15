@@ -4,8 +4,7 @@ function M.setup()
   local opt = vim.opt
   opt.number = true
   opt.relativenumber = true
-  opt.cursorcolumn = true
-  opt.cursorline = false
+  opt.cursorline = true
   opt.signcolumn = 'yes'
   opt.termguicolors = true
   opt.background = 'dark'

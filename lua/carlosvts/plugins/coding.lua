@@ -107,6 +107,7 @@ return {
       require('nvim-treesitter-textobjects').setup { select = { lookahead = true } }
       local select = require('nvim-treesitter-textobjects.select').select_textobject
       local move = require 'nvim-treesitter-textobjects.move'
+      local swap = require 'nvim-treesitter-textobjects.swap'
       local selections = {
         ['af'] = '@function.outer',
         ['if'] = '@function.inner',
@@ -131,6 +132,8 @@ return {
       for lhs, item in pairs(moves) do
         vim.keymap.set({ 'n', 'x', 'o' }, lhs, function() item[1](item[2], 'textobjects') end, { desc = 'Move to ' .. item[2] })
       end
+      vim.keymap.set('n', '<leader>a', function() swap.swap_next '@parameter.inner' end, { desc = 'Swap with next parameter' })
+      vim.keymap.set('n', '<leader>A', function() swap.swap_previous '@parameter.inner' end, { desc = 'Swap with previous parameter' })
     end,
   },
   {

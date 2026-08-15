@@ -42,6 +42,7 @@ return {
       { '<leader>fc', function() require('fzf-lua').commands() end, desc = 'Commands' },
       { '<leader>fh', function() require('fzf-lua').helptags() end, desc = 'Help tags' },
       { '<leader>fd', function() require('fzf-lua').diagnostics_document() end, desc = 'Diagnostics' },
+      { '<leader>fD', function() require('fzf-lua').diagnostics_workspace() end, desc = 'Workspace diagnostics' },
       { '<leader>fp', function() project.pick() end, desc = 'Switch project' },
     },
   },

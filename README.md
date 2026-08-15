@@ -76,7 +76,7 @@ Use `<leader>fp`, `:ProjectFind [raiz-de-busca]` ou `:ProjectSwitch [path]`. A t
 | `<leader>fb`, `<leader>bb` | buffers |
 | `<leader>fr` | recentes do workspace |
 | `<leader>fs` / `<leader>fS` | símbolos do documento / workspace |
-| `<leader>fc`, `<leader>fh`, `<leader>fd` | comandos, ajuda, diagnósticos |
+| `<leader>fc`, `<leader>fh`, `<leader>fd`, `<leader>fD` | comandos, ajuda, diagnósticos do buffer / do workspace |
 | `<leader>fp` | trocar projeto |
 | `<leader>h/j/k/l` | focar split |
 | `<leader>H/L/J/K` | redimensionar split |
@@ -86,8 +86,9 @@ Use `<leader>fp`, `:ProjectFind [raiz-de-busca]` ou `:ProjectSwitch [path]`. A t
 | `<C-s>` | salvar explicitamente |
 | `Alt+j` / `Alt+k` | mover linha ou seleção mantendo indentação |
 | `gd`, `gD`, `gr`, `gi` | definição, declaração, referências, implementação |
-| `K`, `F2` | hover, renomear símbolo |
+| `K`, `F2` | hover + diagnóstico da linha em um só popup, renomear símbolo |
 | `<leader>ca`, `<leader>cd` | code action, diagnóstico da linha |
+| `<leader>a` / `<leader>A` | trocar parâmetro com o próximo / anterior |
 | `<leader>cf` | formatar arquivo ou seleção explicitamente |
 | `<leader>gg` | abrir LazyGit |
 | `]g` / `[g` | navegar hunks Git |
@@ -201,7 +202,7 @@ Use `:ConfigHealth`, `:checkhealth`, `:Lazy`, `:Mason`, `:ConformInfo`, `:LspInf
 nvim --startuptime /tmp/carlosvts-startup.log +qa
 ```
 
-Arquivos acima de 1 MiB ou com linhas acima de 10.000 bytes entram em modo leve: Treesitter, LSP, completion, lint, indent guides e coluna do cursor são desligados, com uma única notificação. Busca, edição, números e syntax básica permanecem.
+Arquivos acima de 1 MiB ou com linhas acima de 10.000 bytes entram em modo leve: Treesitter, LSP, completion, lint e indent guides são desligados, com uma única notificação. Busca, edição, números e syntax básica permanecem.
 
 ## Diferenças entre sistemas
 
