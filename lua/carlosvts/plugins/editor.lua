@@ -44,6 +44,9 @@ return {
       { '<leader>fd', function() require('fzf-lua').diagnostics_document() end, desc = 'Diagnostics' },
       { '<leader>fD', function() require('fzf-lua').diagnostics_workspace() end, desc = 'Workspace diagnostics' },
       { '<leader>fp', function() project.pick() end, desc = 'Switch project' },
+      { '<leader>fw', function() require('fzf-lua').grep_cword { cwd = project.get() } end, desc = 'Workspace grep (word under cursor)' },
+      { '<leader>fw', function() require('fzf-lua').grep_visual { cwd = project.get() } end, mode = 'x', desc = 'Workspace grep (selection)' },
+      { '<leader>f/', function() require('fzf-lua').blines() end, desc = 'Current buffer lines' },
     },
   },
   {
@@ -61,6 +64,11 @@ return {
         function() require('grug-far').with_visual_selection { transient = true, prefills = { paths = project.get() } } end,
         mode = 'x',
         desc = 'Search and replace selection',
+      },
+      {
+        '<leader>br',
+        function() require('grug-far').open { transient = true, prefills = { paths = vim.api.nvim_buf_get_name(0) } } end,
+        desc = 'Search and replace in buffer',
       },
     },
   },

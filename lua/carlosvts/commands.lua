@@ -29,6 +29,8 @@ function M.setup()
 
   vim.api.nvim_create_user_command('ConfigHealth', function() vim.cmd.checkhealth 'carlosvts' end, { desc = 'Check carlosvts.nvim dependencies' })
 
+  vim.api.nvim_create_user_command('Dashboard', function() require('snacks').dashboard() end, { desc = 'Open the start dashboard' })
+
   vim.api.nvim_create_user_command('ConfigUpdate', function()
     vim.notify('Updating plugins, parsers and Mason tools...', vim.log.levels.INFO)
     require('lazy').sync { wait = true, show = false }

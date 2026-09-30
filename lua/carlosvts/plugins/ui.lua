@@ -21,7 +21,45 @@ return {
     ---@type snacks.Config
     opts = {
       bigfile = { enabled = true, size = 1024 * 1024, line_length = 10000 },
-      dashboard = { enabled = false },
+      dashboard = {
+        enabled = true,
+        preset = {
+          keys = {
+            { icon = ' ', key = 'f', desc = 'Find File', action = function() require('fzf-lua').files { cwd = project.get() } end },
+            { icon = ' ', key = 'g', desc = 'Find Text', action = function() require('fzf-lua').live_grep { cwd = project.get() } end },
+            {
+              icon = ' ',
+              key = 'r',
+              desc = 'Recent Files',
+              action = function() require('fzf-lua').oldfiles { cwd = project.get(), cwd_only = true, stat_file = true } end,
+            },
+            { icon = ' ', key = 'p', desc = 'Switch Project', action = function() project.pick() end },
+            {
+              icon = ' ',
+              key = 'e',
+              desc = 'File Explorer',
+              action = function() require('neo-tree.command').execute { toggle = true, dir = project.get(), reveal = true, position = 'left' } end,
+            },
+            {
+              icon = ' ',
+              key = 'R',
+              desc = 'Search & Replace',
+              action = function() require('grug-far').open { transient = true, prefills = { paths = project.get() } } end,
+            },
+            { icon = ' ', key = 'G', desc = 'LazyGit', action = function() Snacks.lazygit { cwd = project.get() } end },
+            { icon = ' ', key = 'n', desc = 'New File', action = ':ene | startinsert' },
+            { icon = ' ', key = 'c', desc = 'Edit Config', action = ':ConfigOpen' },
+            { icon = '󰒲 ', key = 'L', desc = 'Lazy', action = ':Lazy' },
+            { icon = ' ', key = 'q', desc = 'Quit', action = ':qa' },
+          },
+        },
+        sections = {
+          { section = 'header' },
+          { section = 'keys', gap = 1, padding = 1 },
+          { icon = ' ', title = 'Recent Files', section = 'recent_files', cwd = project.get(), limit = 6, indent = 2, padding = 1 },
+          { section = 'startup' },
+        },
+      },
       notifier = { enabled = true, timeout = 2500, style = 'compact', top_down = false },
       quickfile = { enabled = true },
       explorer = { enabled = false },
@@ -85,6 +123,13 @@ return {
         offsets = { { filetype = 'neo-tree', text = 'Workspace', separator = true } },
       },
     },
+    keys = (function()
+      local keys = { { '<leader>bp', function() require('bufferline').pick() end, desc = 'Pick buffer (letter overlay)' } }
+      for i = 1, 9 do
+        keys[#keys + 1] = { '<leader>b' .. i, function() require('bufferline').go_to(i, true) end, desc = 'Go to buffer ' .. i }
+      end
+      return keys
+    end)(),
   },
   {
     'lukas-reineke/indent-blankline.nvim',
