@@ -48,6 +48,7 @@ function M.setup()
     map('n', '<leader>t' .. id, function() require('carlosvts.terminal').toggle(id) end, 'Floating terminal ' .. id)
   end
   map('n', '<leader>r', function() require('carlosvts.run').run() end, 'Run current file')
+  map('n', '<leader>R', function() require('carlosvts.run').run_with_args() end, 'Run current file with arguments')
   map('n', '<leader>tt', '<cmd>botright 15split | terminal<cr>', 'Terminal (bottom split)')
 
   map('n', ']x', [[/^<<<<<<<\|^=======\|^>>>>>>><cr>]], 'Next conflict marker')

@@ -133,8 +133,28 @@ return {
     version = false,
     event = 'VeryLazy',
     config = function()
-      require('mini.ai').setup { n_lines = 300 }
-      require('mini.surround').setup()
+      local ai = require 'mini.ai'
+      ai.setup {
+        n_lines = 300,
+        custom_textobjects = {
+          f = ai.gen_spec.treesitter { a = '@function.outer', i = '@function.inner' },
+          c = ai.gen_spec.treesitter { a = '@class.outer', i = '@class.inner' },
+          a = ai.gen_spec.treesitter { a = '@parameter.outer', i = '@parameter.inner' },
+          o = ai.gen_spec.treesitter { a = { '@block.outer', '@conditional.outer', '@loop.outer' }, i = { '@block.inner', '@conditional.inner', '@loop.inner' } },
+        },
+      }
+      -- `gz` keeps `s` (substitute) and flash's `gs` free.
+      require('mini.surround').setup {
+        mappings = {
+          add = 'gza',
+          delete = 'gzd',
+          find = 'gzf',
+          find_left = 'gzF',
+          highlight = 'gzh',
+          replace = 'gzr',
+          update_n_lines = 'gzn',
+        },
+      }
       require('mini.pairs').setup()
       require('mini.bufremove').setup()
       vim.keymap.set('n', '<leader>bd', function()

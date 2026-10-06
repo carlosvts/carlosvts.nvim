@@ -104,23 +104,10 @@ return {
     branch = 'main',
     lazy = false,
     config = function()
-      require('nvim-treesitter-textobjects').setup { select = { lookahead = true } }
-      local select = require('nvim-treesitter-textobjects.select').select_textobject
+      require('nvim-treesitter-textobjects').setup {}
       local move = require 'nvim-treesitter-textobjects.move'
       local swap = require 'nvim-treesitter-textobjects.swap'
-      local selections = {
-        ['af'] = '@function.outer',
-        ['if'] = '@function.inner',
-        ['ac'] = '@class.outer',
-        ['ic'] = '@class.inner',
-        ['aa'] = '@parameter.outer',
-        ['ia'] = '@parameter.inner',
-        ['ab'] = '@block.outer',
-        ['ib'] = '@block.inner',
-      }
-      for lhs, capture in pairs(selections) do
-        vim.keymap.set({ 'x', 'o' }, lhs, function() select(capture, 'textobjects') end, { desc = 'Select ' .. capture })
-      end
+      -- Text object selection (af/if/ac/ic/aa/ia/ao/io) is provided by mini.ai using these queries.
       local moves = {
         [']f'] = { move.goto_next_start, '@function.outer' },
         ['[f'] = { move.goto_previous_start, '@function.outer' },
