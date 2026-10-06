@@ -35,6 +35,13 @@ function M.setup()
   map('n', ']d', function() vim.diagnostic.jump { count = 1, float = true } end, 'Next diagnostic')
   map('n', '[d', function() vim.diagnostic.jump { count = -1, float = true } end, 'Previous diagnostic')
 
+  map('t', '<Esc><Esc>', [[<C-\><C-n>]], 'Exit terminal mode')
+  map('t', '<C-q>', [[<C-\><C-n><cmd>bdelete!<cr>]], 'Close terminal')
+  for key, command in pairs { h = 'h', j = 'j', k = 'k', l = 'l' } do
+    map('t', '<C-' .. key .. '>', '<C-\\><C-n><C-w>' .. command, 'Focus ' .. key)
+  end
+  map('n', '<leader>tt', '<cmd>botright 15split | terminal<cr>', 'Terminal (bottom split)')
+
   map('n', ']x', [[/^<<<<<<<\|^=======\|^>>>>>>><cr>]], 'Next conflict marker')
   map('n', '[x', [[?^<<<<<<<\|^=======\|^>>>>>>><cr>]], 'Previous conflict marker')
 end

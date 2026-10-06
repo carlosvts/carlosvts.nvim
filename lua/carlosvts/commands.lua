@@ -23,9 +23,30 @@ function M.setup()
     require('carlosvts.options').setup()
     require('carlosvts.keymaps').setup()
     require('carlosvts.autocmds').setup()
-    pcall(vim.cmd.colorscheme, require('carlosvts.theme').colorscheme)
+    require('carlosvts.theme').apply(require('carlosvts.theme').colorscheme)
     vim.notify('Core options and mappings reloaded. Restart Neovim for plugin specification changes.', vim.log.levels.INFO)
   end, { desc = 'Safely reload core configuration' })
+
+  vim.api.nvim_create_user_command('ThemePicker', function(opts)
+    local theme = require 'carlosvts.theme'
+    if opts.args ~= '' then
+      theme.set(opts.args)
+    else
+      theme.pick()
+    end
+  end, {
+    nargs = '?',
+    desc = 'Pick a colorscheme with live preview',
+    complete = function()
+      local names = {}
+      for _, family in ipairs(require('carlosvts.theme').families) do
+        for _, variant in ipairs(family.variants) do
+          table.insert(names, variant.colorscheme)
+        end
+      end
+      return names
+    end,
+  })
 
   vim.api.nvim_create_user_command('ConfigHealth', function() vim.cmd.checkhealth 'carlosvts' end, { desc = 'Check carlosvts.nvim dependencies' })
 

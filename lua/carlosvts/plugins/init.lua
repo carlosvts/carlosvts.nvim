@@ -18,14 +18,14 @@ function M.setup()
   end
   vim.opt.runtimepath:prepend(lazypath)
 
-  local specs = { require('carlosvts.theme').spec() }
+  local specs = require('carlosvts.theme').specs()
   for _, module in ipairs { 'editor', 'coding', 'ui', 'debug' } do
     vim.list_extend(specs, require('carlosvts.plugins.' .. module))
   end
 
   require('lazy').setup(specs, {
     defaults = { lazy = true, version = false },
-    install = { missing = true, colorscheme = { 'gruvbox', 'habamax' } },
+    install = { missing = true, colorscheme = { require('carlosvts.theme').colorscheme, 'habamax' } },
     checker = { enabled = true, notify = false, frequency = 86400 },
     change_detection = { enabled = true, notify = false },
     lockfile = vim.fs.joinpath(vim.fn.stdpath 'config', 'lazy-lock.json'),

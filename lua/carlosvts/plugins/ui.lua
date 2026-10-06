@@ -91,7 +91,7 @@ return {
     event = 'UIEnter',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     opts = {
-      options = { theme = 'gruvbox', globalstatus = true, component_separators = '', section_separators = '' },
+      options = { theme = 'auto', globalstatus = true, component_separators = '', section_separators = '' },
       sections = {
         lualine_a = { 'mode' },
         lualine_b = { 'branch', 'diff', 'diagnostics' },

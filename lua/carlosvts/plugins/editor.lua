@@ -49,6 +49,7 @@ return {
       { '<leader>fh', function() require('fzf-lua').helptags() end, desc = 'Help tags' },
       { '<leader>fd', function() require('fzf-lua').diagnostics_document() end, desc = 'Diagnostics' },
       { '<leader>fD', function() require('fzf-lua').diagnostics_workspace() end, desc = 'Workspace diagnostics' },
+      { '<leader>ft', function() require('carlosvts.theme').pick() end, desc = 'Theme picker' },
       { '<leader>fp', function() project.pick() end, desc = 'Switch project' },
       { '<leader>fw', function() require('fzf-lua').grep_cword { cwd = project.get() } end, desc = 'Workspace grep (word under cursor)' },
       { '<leader>fw', function() require('fzf-lua').grep_visual { cwd = project.get() } end, mode = 'x', desc = 'Workspace grep (selection)' },

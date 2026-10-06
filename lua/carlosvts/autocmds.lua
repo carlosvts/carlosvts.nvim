@@ -45,6 +45,21 @@ function M.setup()
     group = group,
     callback = function() vim.hl.on_yank { timeout = 150 } end,
   })
+  vim.api.nvim_create_autocmd('TermOpen', {
+    group = group,
+    callback = function()
+      vim.opt_local.number = false
+      vim.opt_local.relativenumber = false
+      vim.opt_local.signcolumn = 'no'
+      vim.cmd.startinsert()
+    end,
+  })
+  vim.api.nvim_create_autocmd('TermClose', {
+    group = group,
+    callback = function(args)
+      if vim.v.event.status == 0 then pcall(vim.api.nvim_buf_delete, args.buf, { force = true }) end
+    end,
+  })
   vim.api.nvim_create_autocmd('FileType', {
     group = group,
     pattern = { 'markdown', 'text', 'gitcommit' },
