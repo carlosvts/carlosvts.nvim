@@ -73,6 +73,10 @@ function M.check()
     for _, name in ipairs { 'gcc', 'g++', 'clangd', 'clang-format', 'cmake', 'make', 'codelldb' } do
       check_bin(name, false)
     end
+    vim.health.start 'Run (<leader>r)'
+    for _, name in ipairs { 'cargo', 'rustc', 'go', 'node', 'java', 'bash' } do
+      check_bin(name, false)
+    end
   else
     vim.health.start 'Windows'
     vim.health.ok 'clangd and codelldb are intentionally optional and are not installed automatically'

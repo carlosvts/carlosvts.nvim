@@ -1,6 +1,6 @@
 # carlosvts.nvim
 
-Uma IDE discreta, escalável e _batteries included_, construída diretamente com Neovim, Lua e plugins individuais. A configuração não deriva de nenhuma distribuição e não restaura sessões, não salva ou formata automaticamente, não abre terminais e não altera o diretório por causa de Git ou LSP.
+Uma IDE discreta, escalável e _batteries included_, construída diretamente com Neovim, Lua e plugins individuais. A configuração não deriva de nenhuma distribuição e não restaura sessões, não salva ou formata automaticamente, não abre terminais por conta própria e não altera o diretório por causa de Git ou LSP.
 
 ## Requisitos
 
@@ -9,6 +9,7 @@ Uma IDE discreta, escalável e _batteries included_, construída diretamente com
 - Node.js/npm para ferramentas de linguagem e para o preview Markdown.
 - Python 3 para Python, debugpy e pytest.
 - `bat`, `delta` e LazyGit são recomendados.
+- Opcionais para `<leader>r`/`<leader>R`: `gcc`/`g++` (C/C++), `cargo`/`rustc` (Rust), `go`, `node` e `java`. O instalador não instala Rust, Go nem Java; `:ConfigHealth` indica o que falta.
 - O Treesitter atual requer `tree-sitter-cli` 0.26.1+, `curl`, `tar` e um compilador C.
 
 A configuração interrompe cedo com uma mensagem clara em versões antigas. Execute `:ConfigHealth` para ver ferramentas ausentes.
@@ -47,7 +48,9 @@ lua/carlosvts/autocmds.lua       modo, LSP, arquivos grandes e quickfix
 lua/carlosvts/commands.lua       comandos públicos
 lua/carlosvts/project.lua        workspace editorial e troca de projeto
 lua/carlosvts/tools.lua          Python, parsers e :make
-lua/carlosvts/theme.lua          identidade visual completa
+lua/carlosvts/theme.lua          catálogo de temas, picker e persistência
+lua/carlosvts/terminal.lua       terminais flutuantes e saída do Run
+lua/carlosvts/run.lua            runners por filetype (<leader>r / <leader>R)
 lua/carlosvts/health.lua         :ConfigHealth
 lua/carlosvts/plugins/*.lua      specs por domínio
 scripts/                         instalação idempotente
@@ -56,7 +59,7 @@ lazy-lock.json                   revisões reproduzíveis
 
 ## Workspace
 
-O diretório capturado por `vim.uv.cwd()` no início é o **workspace editorial**. Neo-tree, arquivos, grep, recentes e `:make` usam sempre esse valor. `nvim .` inicia em um buffer genérico vazio, sem dashboard ou menu sobreposto. Nenhum marcador Git, Python ou CMake o substitui silenciosamente.
+O diretório capturado por `vim.uv.cwd()` no início é o **workspace editorial**. Neo-tree, arquivos, grep, recentes e `:make` usam sempre esse valor. `nvim .` inicia em um buffer genérico vazio, sem dashboard ou menu sobreposto; o dashboard do snacks aparece apenas ao abrir `nvim` sem argumentos. Nenhum marcador Git, Python ou CMake o substitui silenciosamente.
 
 Cada servidor LSP continua usando a configuração e os `root_markers` fornecidos pelo `nvim-lspconfig`. Portanto:
 
@@ -78,6 +81,7 @@ Use `<leader>fp`, `:ProjectFind [raiz-de-busca]` ou `:ProjectSwitch [path]`. A t
 | `<leader>fs` / `<leader>fS` | símbolos do documento / workspace |
 | `<leader>fc`, `<leader>fh`, `<leader>fd`, `<leader>fD` | comandos, ajuda, diagnósticos do buffer / do workspace |
 | `<leader>fp` | trocar projeto |
+| `<leader>ft` | seletor de temas com preview |
 | `<leader>fR` | buscar e substituir no workspace (seleção preenche a busca em modo visual) |
 | `]d` / `[d` | próximo / anterior diagnóstico |
 | `<leader>h/j/k/l` | focar split |
@@ -100,6 +104,12 @@ Use `<leader>fp`, `:ProjectFind [raiz-de-busca]` ou `:ProjectSwitch [path]`. A t
 | `<leader>dr/du/dt` | REPL, UI, encerrar debug |
 | `<leader>mr` / `<leader>mp` | render interno / preview no navegador |
 | `]x` / `[x` | navegar marcadores de conflito |
+| `gs` / `gS` | flash: salto por rótulo / seleção por treesitter |
+| `gza/gzd/gzr` | adicionar / remover / trocar delimitadores (mini.surround) |
+| `<C-/>`, `<leader>tf`, `<leader>t1..3` | alternar terminais flutuantes |
+| `<leader>tt` | terminal em split inferior |
+| `<leader>r` / `<leader>R` | executar arquivo atual / com argumentos |
+| `<Esc><Esc>`, `<C-h/j/k/l>`, `<C-q>` | no terminal: modo normal, mudar de janela, fechar |
 
 `y`, `d` e `p` usam o clipboard do sistema. `x`/`X` usam o black-hole register, e `p` visual preserva o clipboard. `<C-v>` permanece Visual Block no modo normal; em insert cola o clipboard. `gc`/`gcc` são os comentários nativos do Neovim 0.12.
 
@@ -108,15 +118,16 @@ Use `<leader>fp`, `:ProjectFind [raiz-de-busca]` ou `:ProjectSwitch [path]`. A t
 | Plugin | Função clara |
 |---|---|
 | lazy.nvim | instalação, lockfile e verificação de updates |
-| gruvbox.nvim | tema dark hard sólido |
+| gruvbox, catppuccin, tokyonight, rose-pine, kanagawa, nightfox | temas sólidos, carregados sob demanda pelo `:ThemePicker`; gruvbox hard é o padrão |
 | lualine / bufferline | estado e buffers sem ruído |
-| snacks.nvim | notifier, bigfile, quickfile e LazyGit somente; dashboard desativado |
+| snacks.nvim | dashboard, notifier, input, words, bigfile, quickfile e LazyGit; demais módulos desativados |
 | neo-tree.nvim | único explorer |
 | fzf-lua | único fuzzy finder |
 | grug-far.nvim | busca e substituição em múltiplos arquivos, com preview |
 | which-key.nvim | descoberta dos grupos semânticos |
+| flash.nvim | salto rápido (`gs`/`gS`); busca e `f/t` nativos intactos |
 | mini.ai/surround/pairs/bufremove | edição estrutural e buffers seguros |
-| nvim-treesitter + textobjects | parsing, highlight e movimentos estruturais |
+| nvim-treesitter + textobjects | parsing, highlight, movimentos (`]f`, `]c`, `]a`) e queries usadas pelo mini.ai |
 | blink.cmp | completion LSP/snippets, sem signature automática |
 | Mason + lspconfig | instalação e configurações LSP modernas |
 | conform.nvim / nvim-lint | formatação explícita e lint com debounce |
@@ -202,6 +213,8 @@ Para formatter, atualize `formatters_by_ft` do Conform e `mason_tools`. Para lin
 - `:ConfigReload`: reaplica somente opções, maps, autocmds e colorscheme; specs exigem restart.
 - `:ConfigHealth`: verifica versão, executáveis, clipboard, plugins, LSPs, formatters, linters e adapters.
 - `:ConfigUpdate`: sincroniza Lazy/lockfile, parsers e registry/ferramentas Mason; depois pede restart.
+- `:ThemePicker [nome]`: seletor de temas com preview, ou aplica direto.
+- `:Dashboard`: abre o dashboard inicial.
 - `:Lint`: lint manual.
 
 O checker do Lazy roda em background e apenas notifica updates; ele nunca atualiza sozinho. Depois de `:ConfigUpdate`, revise e versione `lazy-lock.json`.
@@ -221,5 +234,6 @@ Arquivos acima de 1 MiB ou com linhas acima de 10.000 bytes entram em modo leve:
 - Separadores são construídos com `vim.fs.joinpath`; não há paths fixos de home.
 - Fedora instala C/C++, CMake, clangd, clang-format e codelldb.
 - Windows não instala essas ferramentas e usa junction em vez de symlink.
+- Run e terminais usam `vim.o.shell -c` com sintaxe POSIX (`&&`, `< arquivo`); no Windows nativo não foram validados.
 - Providers de clipboard e o programa que abre o navegador pertencem ao sistema/terminal.
 - O requisito de compilador do Treesitter conflita deliberadamente com a política de não instalar toolchain C no Windows; veja a nota da instalação Windows.
