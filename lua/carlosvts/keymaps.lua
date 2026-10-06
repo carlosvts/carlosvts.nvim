@@ -40,6 +40,14 @@ function M.setup()
   for key, command in pairs { h = 'h', j = 'j', k = 'k', l = 'l' } do
     map('t', '<C-' .. key .. '>', '<C-\\><C-n><C-w>' .. command, 'Focus ' .. key)
   end
+  for _, lhs in ipairs { '<C-/>', '<C-_>' } do
+    map({ 'n', 't' }, lhs, function() require('carlosvts.terminal').toggle() end, 'Toggle floating terminal')
+  end
+  map('n', '<leader>tf', function() require('carlosvts.terminal').toggle(1) end, 'Floating terminal 1')
+  for id = 1, 3 do
+    map('n', '<leader>t' .. id, function() require('carlosvts.terminal').toggle(id) end, 'Floating terminal ' .. id)
+  end
+  map('n', '<leader>r', function() require('carlosvts.run').run() end, 'Run current file')
   map('n', '<leader>tt', '<cmd>botright 15split | terminal<cr>', 'Terminal (bottom split)')
 
   map('n', ']x', [[/^<<<<<<<\|^=======\|^>>>>>>><cr>]], 'Next conflict marker')

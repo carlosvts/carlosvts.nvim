@@ -170,6 +170,10 @@ O DAP carrega quando um atalho `<leader>d` é usado. A UI abre ao iniciar/anexar
 
 `<leader>ft` (ou `:ThemePicker`) abre o seletor de temas com preview ao vivo; `Esc` restaura o tema anterior e `Enter` aplica e salva a escolha em `stdpath('state')/carlosvts-theme.json`. `:ThemePicker <nome>` aplica direto. Os temas disponíveis (gruvbox, catppuccin, tokyonight, rose-pine, kanagawa, nightfox) ficam em `M.families` de `lua/carlosvts/theme.lua`; para adicionar um, inclua uma família com repositório, variantes e `setup`. Mantenha o fundo sólido ao trocar de tema.
 
+## Terminais e Run
+
+`<C-/>` / `<leader>t1..3` alternam três terminais flutuantes persistentes (só um visível por vez). `<leader>r` salva e executa o arquivo atual em um float que permanece aberto (`q` fecha): C, C++ (C++23), Python, Lua (`nvim -l`) e Rust (`cargo run` se houver `Cargo.toml`, senão `rustc`). Os runners ficam em `lua/carlosvts/run.lua`.
+
 ## Expandindo
 
 ### Adicionar um plugin

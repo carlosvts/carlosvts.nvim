@@ -57,7 +57,7 @@ function M.setup()
   vim.api.nvim_create_autocmd('TermClose', {
     group = group,
     callback = function(args)
-      if vim.v.event.status == 0 then pcall(vim.api.nvim_buf_delete, args.buf, { force = true }) end
+      if vim.v.event.status == 0 and not vim.b[args.buf].carlosvts_keep then pcall(vim.api.nvim_buf_delete, args.buf, { force = true }) end
     end,
   })
   vim.api.nvim_create_autocmd('FileType', {

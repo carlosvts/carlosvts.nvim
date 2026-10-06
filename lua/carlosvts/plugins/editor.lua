@@ -17,6 +17,7 @@ return {
         { '<leader>f', group = 'Find' },
         { '<leader>g', group = 'Git' },
         { '<leader>m', group = 'Markdown' },
+        { '<leader>t', group = 'Terminal' },
         { '<leader>w', group = 'Windows' },
         { '<leader>x', group = 'Diagnostics' },
       }
