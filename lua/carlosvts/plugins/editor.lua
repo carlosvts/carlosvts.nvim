@@ -25,6 +25,12 @@ return {
   {
     'ibhagwan/fzf-lua',
     cmd = 'FzfLua',
+    init = function()
+      vim.ui.select = function(...)
+        require('fzf-lua').register_ui_select { winopts = { height = 0.4, width = 0.5, row = 0.4 } }
+        return vim.ui.select(...)
+      end
+    end,
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     opts = { 'fzf-native', winopts = { border = 'rounded', preview = { border = 'border' } } },
     keys = {
@@ -46,6 +52,9 @@ return {
       { '<leader>fp', function() project.pick() end, desc = 'Switch project' },
       { '<leader>fw', function() require('fzf-lua').grep_cword { cwd = project.get() } end, desc = 'Workspace grep (word under cursor)' },
       { '<leader>fw', function() require('fzf-lua').grep_visual { cwd = project.get() } end, mode = 'x', desc = 'Workspace grep (selection)' },
+      { '<leader>xx', function() require('fzf-lua').diagnostics_document() end, desc = 'Document diagnostics' },
+      { '<leader>xX', function() require('fzf-lua').diagnostics_workspace() end, desc = 'Workspace diagnostics' },
+      { '<leader>xq', function() require('fzf-lua').quickfix() end, desc = 'Quickfix list' },
       { '<leader>f/', function() require('fzf-lua').blines() end, desc = 'Current buffer lines' },
     },
   },
@@ -93,7 +102,7 @@ return {
         follow_current_file = { enabled = true, leave_dirs_open = false },
         filtered_items = {
           visible = false,
-          hide_dotfiles = true,
+          hide_dotfiles = false,
           hide_gitignored = true,
           hide_by_name = { '.git', '__pycache__', '.pytest_cache', '.mypy_cache', '.ruff_cache', '.venv', 'venv', 'node_modules', 'build', 'dist', '.cache' },
           never_show = { '.DS_Store' },
@@ -108,6 +117,14 @@ return {
       default_component_configs = { indent = { with_expanders = true }, git_status = { symbols = { unstaged = 'M', staged = 'S' } } },
       window = { position = 'left', width = 34 },
     },
+  },
+  {
+    'folke/flash.nvim',
+    keys = {
+      { 'gs', mode = { 'n', 'x', 'o' }, function() require('flash').jump() end, desc = 'Flash jump' },
+      { 'gS', mode = { 'n', 'x', 'o' }, function() require('flash').treesitter() end, desc = 'Flash treesitter' },
+    },
+    opts = { modes = { search = { enabled = false }, char = { enabled = false } } },
   },
   {
     'echasnovski/mini.nvim',

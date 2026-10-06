@@ -153,14 +153,14 @@ return {
       completion = {
         keyword = { range = 'full' },
         list = { selection = { preselect = false, auto_insert = false } },
-        documentation = { auto_show = false },
+        documentation = { auto_show = true, auto_show_delay_ms = 300 },
         menu = { auto_show = true },
       },
-      signature = { enabled = false },
+      signature = { enabled = true },
       sources = {
         default = { 'lsp', 'path', 'snippets', 'buffer' },
         providers = {
-          lsp = { min_keyword_length = 2 },
+          lsp = { min_keyword_length = 0 },
           buffer = { min_keyword_length = 2 },
           path = { min_keyword_length = 2 },
         },
@@ -215,7 +215,16 @@ return {
   {
     'stevearc/conform.nvim',
     cmd = { 'ConformInfo' },
+    event = 'BufWritePre',
     keys = {
+      {
+        '<leader>cF',
+        function()
+          vim.g.carlosvts_format_on_save = not vim.g.carlosvts_format_on_save
+          vim.notify('Format on save: ' .. (vim.g.carlosvts_format_on_save and 'on' or 'off'), vim.log.levels.INFO)
+        end,
+        desc = 'Toggle format on save',
+      },
       {
         '<leader>cf',
         function()
@@ -231,6 +240,10 @@ return {
     },
     opts = {
       notify_on_error = true,
+      format_on_save = function(buf)
+        if not vim.g.carlosvts_format_on_save or vim.b[buf].carlosvts_bigfile then return end
+        return { timeout_ms = 3000, lsp_format = 'never' }
+      end,
       notify_no_formatters = true,
       formatters_by_ft = {
         python = { 'ruff_organize_imports', 'ruff_format' },

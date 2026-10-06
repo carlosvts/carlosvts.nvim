@@ -44,6 +44,10 @@ function M.setup()
   opt.laststatus = 3
   opt.showmode = false
   opt.winborder = 'rounded'
+  opt.foldmethod = 'expr'
+  opt.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+  opt.foldlevelstart = 99
+  opt.foldtext = ''
 
   vim.fn.mkdir(vim.fn.stdpath 'state' .. '/swap', 'p')
   vim.fn.mkdir(vim.fn.stdpath 'state' .. '/undo', 'p')

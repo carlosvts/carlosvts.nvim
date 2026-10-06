@@ -26,7 +26,7 @@ function M.setup()
   require('lazy').setup(specs, {
     defaults = { lazy = true, version = false },
     install = { missing = true, colorscheme = { 'gruvbox', 'habamax' } },
-    checker = { enabled = true, notify = true, frequency = 86400 },
+    checker = { enabled = true, notify = false, frequency = 86400 },
     change_detection = { enabled = true, notify = false },
     lockfile = vim.fs.joinpath(vim.fn.stdpath 'config', 'lazy-lock.json'),
     performance = {

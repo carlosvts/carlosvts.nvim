@@ -67,7 +67,7 @@ function M.setup()
   vim.diagnostic.config {
     severity_sort = true,
     underline = true,
-    virtual_text = false,
+    virtual_text = { current_line = true, spacing = 2, prefix = '●' },
     signs = {
       text = {
         [vim.diagnostic.severity.ERROR] = '',
