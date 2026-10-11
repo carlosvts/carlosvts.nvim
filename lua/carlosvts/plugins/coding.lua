@@ -15,6 +15,7 @@ local servers = {
   'dockerls',
   'docker_compose_language_service',
   'terraformls',
+  'rust_analyzer',
 }
 if not is_windows or vim.fn.executable 'clangd' == 1 then servers[#servers + 1] = 'clangd' end
 
@@ -27,6 +28,7 @@ local mason_tools = {
   'json-lsp',
   'lua-language-server',
   'marksman',
+  'rust-analyzer',
   'taplo',
   'terraform-ls',
   'yaml-language-server',
@@ -237,6 +239,7 @@ return {
         c = { 'clang_format' },
         cpp = { 'clang_format' },
         lua = { 'stylua' },
+        rust = { 'rustfmt' },
         json = { 'prettier' },
         jsonc = { 'prettier' },
         yaml = { 'prettier' },

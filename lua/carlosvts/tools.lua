@@ -25,6 +25,7 @@ M.treesitter_parsers = {
   'python',
   'query',
   'regex',
+  'rust',
   'toml',
   'vim',
   'vimdoc',
